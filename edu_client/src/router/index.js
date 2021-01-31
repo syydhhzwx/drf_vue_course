@@ -8,6 +8,7 @@ import Course from "../components/Course";
 import Detail from "../components/Detail";
 import Cart from "../components/Cart";
 import CartItem from "../components/CartItem";
+import Order from "../components/Order";
 
 Vue.use(Router)
 
@@ -21,5 +22,6 @@ export default new Router({
       {path:'/detail/:id',component:Detail},
       {path:'/cart',component:Cart},
       {path:'/cartitem',component:CartItem},
+      {path:'/order',component:Order},
   ]
 })

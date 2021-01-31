@@ -26,7 +26,7 @@ class CourseModelSerializer(ModelSerializer):
         model = Course
         fields = ['id', 'name', 'course_img', 'students',
                   'lessons', 'pub_lessons', 'price', 'teacher',
-                  'lesson_list', ]
+                  'lesson_list', 'discount_name', 'real_price']
 
     def validate(self, attrs):
         print(attrs)
@@ -42,7 +42,8 @@ class CourseDetailModelSerializer(ModelSerializer):
         model = Course
         fields = ['id', 'name', 'course_img', 'students',
                   'lessons', 'pub_lessons', 'price', 'teacher',
-                  'level_name', 'course_video', 'brief_html']
+                  'level_name', 'course_video', 'brief_html',
+                  'discount_name', 'real_price', 'active_time']
 
 
 class CourseLessonModelSerializer(ModelSerializer):

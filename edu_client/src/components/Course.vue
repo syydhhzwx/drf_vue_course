@@ -44,10 +44,16 @@
                             </li>
 
                         </ul>
-                        <div class="pay-box">
-                            <span class="discount-type">限时免费</span>
-                            <span class="discount-price">￥0.00元</span>
-                            <span class="original-price">原价：{{course.price}}元</span>
+                        <div class="pay-box" v-if="course.discount_name">
+                            <span class="discount-type">{{course.discount_name}}</span>
+                            <span class="discount-price">￥{{parseInt(course.real_price)}}元</span>
+                            <span class="original-price">原价：{{parseInt(course.price)}}元</span>
+                            <span class="buy-now">立即购买</span>
+                        </div>
+                        <div class="pay-box" v-else>
+                            <span class="discount-type"></span>
+                            <span class="discount-price">原价：{{course.price}}元</span>
+<!--                            <span class="original-price"></span>-->
                             <span class="buy-now">立即购买</span>
                         </div>
                     </div>
@@ -165,7 +171,7 @@ export default {
             if (this.category > 0) {
                 filters.course_category = this.category;
             }
-            console.log(filters);
+            // console.log(filters);
             this.axios.get(this.$settings.HOST + 'course/course/', {
                 params: filters
             }).then(res => {

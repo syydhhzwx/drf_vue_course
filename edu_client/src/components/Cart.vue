@@ -15,7 +15,7 @@
                     <span class="do_more">操作</span>
                 </div>
                 <div class="cart_course_list">
-                    <CartItem v-for="course in cart_list" :course="course"></CartItem>
+                    <CartItem v-for="course in cart_list" :course="course" :key="course.id" @change_expice="cart_total_price"> </CartItem>
 
 
                 </div>
@@ -23,8 +23,8 @@
                     <span class="cart_select"><label> <el-checkbox
                         v-model="checked"></el-checkbox><span>全选</span></label></span>
                     <span class="cart_delete"><i class="el-icon-delete"></i> <span>删除</span></span>
-                    <span class="goto_pay">去结算</span>
-                    <span class="cart_total">总计：¥0.0</span>
+                    <span class="goto_pay" > <router-link to="/order">去结算</router-link> </span>
+                    <span class="cart_total">总计：¥{{total_price}}</span>
                 </div>
             </div>
         </div>
@@ -42,10 +42,21 @@ export default {
     data(){
         return {
             checked: false,
-            cart_list: [],
+            cart_list: [],      // 购物车中的课程价格
+            total_price: 0.00,  // 购物车中已勾选的课程总价
         }
     },
     methods: {
+        // 计算商品总价
+        cart_total_price(){
+            let total = 0;
+            this.cart_list.forEach((course, key)=>{
+                if (course.selected) {
+                    total += parseFloat(course.real_price)
+            }
+                this.total_price = total
+            })
+        },
         // 先判断用户是否dengl
         check_user_login() {
             let token = sessionStorage.getItem('token')
@@ -72,6 +83,7 @@ export default {
 
                 this.cart_list = res.data
                 this.$store.commit('length_change',this.cart_list.length)
+                this.cart_total_price()
             }).catch(error => {
                 console.log(error);
             })

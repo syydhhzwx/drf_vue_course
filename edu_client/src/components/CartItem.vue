@@ -8,14 +8,12 @@
             <span><router-link to="/course/detail/1">{{ course.name }}</router-link></span>
         </div>
         <div class="cart_column column_3">
-            <el-select size="mini" placeholder="请选择购买有效期" class="my_el_select">
-                <el-option label="1个月有效" value="30" key="30"></el-option>
-                <el-option label="2个月有效" value="60" key="60"></el-option>
-                <el-option label="3个月有效" value="90" key="90"></el-option>
-                <el-option label="永久有效" value="10000" key="10000"></el-option>
+            <el-select v-model="course.expire_id" size="mini" placeholder="请选择购买有效期" class="my_el_select">
+                <el-option v-for="item in course.expire_list"  :label="item.expire_list" :value="item.id" :key="item.id"></el-option>
             </el-select>
         </div>
-        <div class="cart_column column_4">{{ course.price }}</div>
+        <div class="cart_column column_4" >{{course.real_price.toFixed(2)}}</div>
+<!--        <div class="cart_column column_4" v-el>{{ parseInt(course.price) }}</div>-->
         <div class="cart_column column_4" > <el-button @click="del_course(course.id)">删除</el-button> </div>
     </div>
 </template>
@@ -24,12 +22,52 @@
 export default {
     name: "CartItem",
     props: ['course'],
+    data(){
+        return{
+
+        }
+
+    },
     watch: {
+        // 监测selected是否改变
         "course.selected": function () {
             this.get_selected();
+        },
+        // 监听课程对应的有效期id是否发生改变
+        'course.expire_id':function () {
+            this.change_expire()
         }
     },
     methods: {
+        //修改redis中的有效期
+        change_expire(){
+            // 修改有效期  并得到有效期对应的价格价格
+            // console.log(this.real_price);
+            let token = sessionStorage.token || localStorage.token;
+            this.axios.put(this.$settings.HOST+'cart/option/',{
+                //要修改的有效期id，要修改课程id
+                expric_id: this.course.expire_id,
+                course_id: this.course.id,
+
+            },{
+                headers:{
+                    'Authorization': 'jwt ' + token
+                }
+            }).then(res =>{
+                console.log(res.data);
+                this.$message.success('切换成功')
+                console.log(res.data.price);
+                if (res.data.price){
+                    this.course.real_price = res.data.price
+                    // this.$router.go(0)
+                    // 当有限期切换时向父组件提交事件来修改总价
+                    this.$emit('change_expice')
+                }
+            }).catch(error=>{
+                console.log(error);
+            })
+        },
+        // 切换选中状态
         get_selected() {
             let user_id = sessionStorage.getItem('user_id')
             console.log(this.course);
@@ -41,6 +79,7 @@ export default {
                     console.log(res.data);
                     if (!res.data.message){
                         this.$message.success('当前状态已改变')
+
                     }
                 }).catch(error=>{
                     console.log(error);
@@ -64,6 +103,7 @@ export default {
             }
             // this.$message.success('当前状态已改变')
         },
+        // 删除购物车中的课程
         del_course(id) {
             // alert(111)
             console.log(id);
@@ -79,14 +119,19 @@ export default {
             }).then(res => {
                 console.log(res.data);
                 if (!res.data.message){
-
-                    this.$message.success('删除成功')
+                    this.$router.go(0)
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success',
+                        duration: 1000,
+                    });
                 }
             }).catch(error=>{
                 console.log(error);
             })
         }
-    }
+    },
+
 }
 </script>
 
