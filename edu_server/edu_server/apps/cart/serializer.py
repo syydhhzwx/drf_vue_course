@@ -52,6 +52,7 @@ class OrderModelSerializer(ModelSerializer):
                 order_desc="选择这个课程是你最好的决定",
                 user_id=user_id,
             )
+        # print(order.order_number)
         # 获取当前购物车中的所有商品
         cart_list_byte = redis_connection.hgetall("cart_%s" % user_id)
         select_list_byte = redis_connection.smembers("select_%s" % user_id)

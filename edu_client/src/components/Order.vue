@@ -67,6 +67,19 @@ export default {
             }).then(res=>{
                 console.log(res.data);
                 this.$message.success('订单生成成功，即将跳转到支付页面')
+                // 生成订单后，获取支付链接
+                this.axios.get(this.$settings.HOST+'pay/option/',{
+                    params:{
+                        order_number:res.data.order_number
+                    }
+                }).then(res=>{
+                    // 返回支付链接后 跳转到支付宝支付
+                    console.log(res.data);
+                    location.href = res.data
+                }).catch(error=>{
+                    console.log(error);
+                    this.$message.error(error.response.data)
+                })
             }).catch(error=>{
                 console.log(error);
             })

@@ -9,10 +9,12 @@ import Detail from "../components/Detail";
 import Cart from "../components/Cart";
 import CartItem from "../components/CartItem";
 import Order from "../components/Order";
+import OrderSuccess from "../components/OrderSuccess";
 
 Vue.use(Router)
 
 export default new Router({
+    mode:'history',
   routes: [
       {path:'/index',component:Index},
       {path:'/',component:Home},
@@ -23,5 +25,6 @@ export default new Router({
       {path:'/cart',component:Cart},
       {path:'/cartitem',component:CartItem},
       {path:'/order',component:Order},
+      {path:'/result',component:OrderSuccess},
   ]
 })

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'user',
     'course',
     'cart',
+    'payments',
 ]
 
 # 富文本编辑器 配置
@@ -258,4 +259,20 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
+}
+
+# 支付宝开发配置
+ALIAPY_CONFIG = {
+    # "gateway_url": "https://openapi.alipay.com/gateway.do?", #真实支付宝网关地址
+    "gateway_url": "https://openapi.alipaydev.com/gateway.do?",  # 沙箱支付宝网关地址
+    "appid": "2021000117608093",
+    "app_notify_url": None,
+    # app私钥
+    "app_private_key_path": open(os.path.join(BASE_DIR, "apps/payments/keys/app_private_key.pem")).read(),
+    # 支付宝公钥
+    "alipay_public_key_path": open(os.path.join(BASE_DIR, "apps/payments/keys/alipay_public_key.pem")).read(),
+    "sign_type": "RSA2",
+    "debug": False,
+    "return_url": "http://localhost:8080/result",  # 同步回调地址
+    "notify_url": "http://api.baizhistore.cn:8000/payments/result",  # 异步结果通知
 }
